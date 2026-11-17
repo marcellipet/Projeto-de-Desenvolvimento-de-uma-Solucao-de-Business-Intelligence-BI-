@@ -1,0 +1,46 @@
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.campo {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--texto-2);
+}
+
+.campo select {
+  min-width: 170px;
+  font-size: 14px;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linha-forte);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+
+.limpar {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--destaque);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.limpar:hover {
+  background: var(--destaque-suave);
+}
+
+@media (max-width: 480px) {
+  .campo,
+  .campo select {
+    width: 100%;
+  }
+}

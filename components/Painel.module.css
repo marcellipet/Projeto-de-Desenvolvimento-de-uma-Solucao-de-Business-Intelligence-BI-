@@ -1,0 +1,70 @@
+/* CSS Modules: estas classes só valem dentro do Painel */
+
+.painel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  display: grid;
+  gap: 16px;
+}
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.marca {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-fraco);
+}
+
+.titulo {
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.aviso {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--texto-2);
+  background: var(--superficie);
+  border: 1px dashed var(--linha-forte);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.duas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Tablet: indicadores em duas colunas, gráficos um por linha */
+@media (max-width: 920px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .duas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Celular: tudo em uma coluna */
+@media (max-width: 480px) {
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}
