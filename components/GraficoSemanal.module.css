@@ -1,0 +1,6 @@
+/* O Chart.js ocupa a altura desta caixa (maintainAspectRatio: false).
+   Sem altura definida, o gráfico some ou cresce sem parar. */
+.caixa {
+  position: relative;
+  height: 280px;
+}

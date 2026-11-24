@@ -1,0 +1,67 @@
+/*
+  Cores e medidas do painel inteiro.
+  Os componentes usam sempre var(--nome), nunca o código da cor direto.
+  O gráfico do Chart.js também lê estas variáveis (GraficoSemanal.js).
+*/
+:root {
+  color-scheme: light;
+
+  --fundo: #f1f4f8;
+  --superficie: #ffffff;
+  --superficie-2: #f5f7fa;
+  --texto: #121821;
+  --texto-2: #465163;
+  --texto-fraco: #6c7789;
+  --linha: #dfe4eb;
+  --linha-forte: #c4ccd8;
+  --destaque: #1c5cab;
+  --destaque-suave: #e4edf9;
+
+  /* Séries dos gráficos */
+  --serie-1: #2a78d6; /* não delegável */
+  --serie-2: #eb6834; /* delegável */
+
+  /* Status: sempre aparecem junto com um texto, nunca só a cor */
+  --bom: #0ca30c;
+  --alerta: #fab219;
+  --critico: #d03b3b;
+
+  --raio: 8px;
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+}

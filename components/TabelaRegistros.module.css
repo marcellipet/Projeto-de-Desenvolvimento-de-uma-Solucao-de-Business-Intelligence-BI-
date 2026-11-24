@@ -1,0 +1,98 @@
+.conteudo {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rolagem {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabela th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-fraco);
+  white-space: nowrap;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--linha-forte);
+}
+
+.tabela td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--linha);
+}
+
+.tabela tbody tr:hover {
+  background: var(--superficie-2);
+}
+
+.tabela .numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.data {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quadradinho laranja + texto, ligando ao "Delegável" dos gráficos */
+.delegavel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delegavel::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--serie-2);
+}
+
+.fraco {
+  color: var(--texto-fraco);
+}
+
+.rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--texto-fraco);
+}
+
+.botao {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linha-forte);
+  border-radius: 6px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.botao:hover {
+  border-color: var(--destaque);
+  color: var(--destaque);
+}
+
+.vazio {
+  font-size: 13.5px;
+  color: var(--texto-fraco);
+  padding: 12px 0;
+}

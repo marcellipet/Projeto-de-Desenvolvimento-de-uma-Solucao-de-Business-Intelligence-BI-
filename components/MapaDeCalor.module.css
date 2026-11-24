@@ -1,0 +1,73 @@
+.conteudo {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* No celular a tabela rola para o lado sem alargar a página */
+.rolagem {
+  overflow-x: auto;
+}
+
+.mapa {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: separate;
+  border-spacing: 2px; /* o espaço branco entre as células, sem precisar de borda */
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mapa th {
+  font-weight: 500;
+  color: var(--texto-2);
+  text-align: center;
+  white-space: nowrap;
+  padding: 4px 6px;
+}
+
+.mapa th:first-child,
+.mapa tbody th {
+  text-align: left;
+}
+
+.mapa td {
+  text-align: center;
+  height: 34px;
+  min-width: 50px;
+  border-radius: 3px;
+}
+
+.zero {
+  color: var(--texto-fraco);
+}
+
+.total {
+  font-weight: 600;
+  color: var(--texto-2);
+}
+
+.escala {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--texto-fraco);
+}
+
+.gradiente {
+  width: 120px;
+  height: 8px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--serie-1) 8%, var(--superficie)),
+    color-mix(in oklab, var(--serie-1) 88%, var(--superficie))
+  );
+}
+
+.vazio {
+  font-size: 13.5px;
+  color: var(--texto-fraco);
+  padding: 12px 0;
+}

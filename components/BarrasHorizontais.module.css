@@ -1,0 +1,78 @@
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+/* Três colunas: nome | barra | valor */
+.linha {
+  display: grid;
+  grid-template-columns: minmax(80px, 10.5rem) minmax(0, 1fr) 5.5rem;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  font-size: 13.5px;
+}
+
+.linha:hover {
+  background: var(--superficie-2);
+}
+
+.nome {
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.trilho {
+  height: 14px;
+}
+
+/* A barra é um flex: cada parte cresce na proporção das suas horas,
+   com 2px de espaço entre elas */
+.barra {
+  display: flex;
+  gap: 2px;
+  height: 100%;
+}
+
+.parte {
+  flex: 1 1 0;
+  min-width: 2px;
+  height: 100%;
+}
+
+/* Só a ponta da barra é arredondada; a base fica reta */
+.parte:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.serie1 {
+  background: var(--serie-1);
+}
+
+.serie2 {
+  background: var(--serie-2);
+}
+
+.valor {
+  display: grid;
+  text-align: right;
+  font-size: 13px;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums; /* números alinhados na coluna */
+  white-space: nowrap;
+}
+
+.secundario {
+  font-size: 12px;
+  color: var(--texto-fraco);
+}
+
+.vazio {
+  font-size: 13.5px;
+  color: var(--texto-fraco);
+  padding: 12px 0;
+}

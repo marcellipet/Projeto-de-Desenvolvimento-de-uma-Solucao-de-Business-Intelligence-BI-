@@ -1,0 +1,38 @@
+.legenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--texto-2);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amostra {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.serie1 {
+  background: var(--serie-1);
+}
+
+.serie2 {
+  background: var(--serie-2);
+}
+
+.linha {
+  width: 16px;
+  height: 0;
+  border-top: 2px dashed var(--texto-2);
+  border-radius: 0;
+}
