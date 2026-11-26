@@ -20,42 +20,59 @@ npm run dev
 
 Abra http://localhost:3000. Cada arquivo salvo atualiza a página sozinho.
 
-## O que o painel mostra
+## Layout
 
-| Visual | Pergunta que responde | Feito com |
+O painel imita uma página do Power BI: uma tela de 1280 × 720 que aumenta ou
+diminui inteira para caber na janela (`public/escala.js`). Em cima ficam o
+cabeçalho e a barra de filtros; embaixo, as abas das páginas. No celular (até
+760px) a tela vira uma página comum que rola. Segue o tema claro ou escuro do
+sistema.
+
+**Filtros** (botões, um ativo por grupo): período, cliente, pessoa e tipo
+(delegável ou não). Todas as páginas recalculam juntas.
+
+| Página | Indicadores | Visuais |
 | --- | --- | --- |
-| Cartões no topo | Quanto da capacidade está ocupada? Quanto é delegável? Quanto vai para prospecção? | HTML + CSS |
-| Horas por semana | A carga cabe na capacidade dos sócios? | Chart.js |
-| Tempo por cliente | Qual cliente consome mais tempo? | HTML + CSS |
-| Tempo por atividade | O que mais ocupa a rotina e o que dá para delegar? | HTML + CSS |
-| Cliente × atividade | Em que tipo de trabalho vai o tempo de cada cliente? | `<table>` + `color-mix()` |
-| Apontamentos | De onde saíram os números? | `<table>` |
+| Visão Geral | horas registradas, ocupação da capacidade, horas delegáveis, prospecção | tempo por cliente, tempo por atividade (delegável em laranja), faixa de uso da capacidade |
+| Por Cliente | cliente com mais horas, clientes atendidos, concentração nos 2 maiores, trabalho interno | mapa de calor cliente × atividade, resumo por cliente |
+| Tendência | média semanal, semana mais cheia, semanas acima da capacidade, média por pessoa por dia | horas por semana × capacidade (Chart.js), horas por pessoa |
+| Decisão de Contratação | tempo delegável, liberável por semana, equivalente em pessoas, prospecção | horas delegáveis por atividade, rosca delegável × não delegável |
+| Apontamentos | | tabela com todos os registros filtrados |
 
-Filtros: mês, cliente e pessoa. Todos os visuais recalculam juntos.
+Só o gráfico semanal usa Chart.js. Barras, rosca, mapa de calor e medidores são
+HTML + CSS (`width` em %, `conic-gradient`, `color-mix`). As animações (barras
+crescendo, rosca girando, páginas entrando) são CSS e ficam desligadas para quem
+pediu menos movimento no sistema.
 
 ## Estrutura
 
 ```
 ├── app/
-│   ├── layout.js          título da aba e idioma
+│   ├── layout.js          fonte, título da aba e o script de escala
 │   ├── page.js            lê os dados e entrega para o Painel
-│   └── globals.css        cores e medidas (variáveis CSS)
+│   └── globals.css        cores (claro e escuro) e medidas
 ├── components/
-│   ├── Painel.js          guarda os filtros e monta a tela (único com estado)
-│   ├── Filtros.js
+│   ├── Painel.js          guarda filtros e aba aberta, monta a tela (único com estado)
+│   ├── Filtros.js         barra de segmentadores
+│   ├── paginas/           uma página por aba + a grade comum (Pagina.module.css)
 │   ├── CartaoKpi.js       cartão de indicador
-│   ├── Medidor.js         barra de ocupação com status
-│   ├── Bloco.js           moldura de cada visual (título + pergunta + legenda)
+│   ├── Medidor.js         barra fina de ocupação com status
+│   ├── Bloco.js           cartão de cada visual (título + pergunta + legenda)
 │   ├── Legenda.js
 │   ├── GraficoSemanal.js  único componente com Chart.js
 │   ├── BarrasHorizontais.js
 │   ├── MapaDeCalor.js
+│   ├── Rosca.js
+│   ├── UsoDaCapacidade.js
+│   ├── TabelaClientes.js
 │   └── TabelaRegistros.js
 ├── lib/
-│   ├── calculos.js        toda a matemática (funções puras)
+│   ├── calculos.js        toda a matemática (funções puras); resumir() alimenta as páginas
 │   ├── config.js          horas por dia, feriados, lista de atividades
 │   ├── datas.js
 │   └── formatar.js        números em pt-BR
+├── public/
+│   └── escala.js          encaixa a tela 1280 × 720 na janela
 ├── data/
 │   └── registros.json     apontamentos de horas (hoje: fictícios)
 └── scripts/

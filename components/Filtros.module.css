@@ -1,46 +1,69 @@
+/* Barra de segmentadores, logo abaixo do cabeçalho.
+   As medidas foram ajustadas para tudo caber em uma linha na tela de 1280px. */
 .filtros {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  gap: 6px 18px;
+  padding: 8px 24px;
+  background: var(--faixa);
+  border-bottom: 1px solid var(--borda);
 }
 
-.campo {
-  display: grid;
+.grupo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 4px;
+}
+
+.rotulo {
+  margin-right: 6px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--texto-2);
+  color: var(--texto-fraco);
 }
 
-.campo select {
-  min-width: 170px;
-  font-size: 14px;
+.chip {
+  padding: 3px 8px;
   color: var(--texto);
   background: var(--superficie);
-  border: 1px solid var(--linha-forte);
-  border-radius: 6px;
-  padding: 7px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--destaque);
+}
+
+/* aria-pressed="true" = filtro escolhido */
+.chip[aria-pressed="true"] {
+  color: var(--texto-sobre-destaque);
+  background: var(--destaque);
+  border-color: var(--destaque);
 }
 
 .limpar {
-  font-size: 13px;
+  margin-left: auto;
+  padding: 3px 8px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--destaque);
   background: none;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 7px 10px;
+  border: 0;
+  border-radius: 3px;
   cursor: pointer;
 }
 
 .limpar:hover {
-  background: var(--destaque-suave);
+  text-decoration: underline;
 }
 
-@media (max-width: 480px) {
-  .campo,
-  .campo select {
-    width: 100%;
+@media (max-width: 760px) {
+  .filtros {
+    gap: 8px 16px;
+    padding: 10px 16px;
   }
 }

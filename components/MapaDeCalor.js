@@ -31,7 +31,7 @@ export default function MapaDeCalor({ registros, atividades }) {
             </tr>
           </thead>
           <tbody>
-            {clientes.map((cliente) => {
+            {clientes.map((cliente, linha) => {
               const totalDoCliente = atividades.reduce(
                 (total, a) => total + valorDe(cliente, a.nome),
                 0
@@ -40,7 +40,7 @@ export default function MapaDeCalor({ registros, atividades }) {
               return (
                 <tr key={cliente}>
                   <th scope="row">{cliente}</th>
-                  {atividades.map((a) => {
+                  {atividades.map((a, coluna) => {
                     const valor = valorDe(cliente, a.nome);
                     if (!valor) {
                       return (
@@ -54,10 +54,13 @@ export default function MapaDeCalor({ registros, atividades }) {
                     return (
                       <td
                         key={a.nome}
+                        className={styles.celula}
                         title={`${cliente} · ${a.nome}: ${horasExatas(valor)}`}
                         style={{
                           background: `color-mix(in oklab, var(--serie-1) ${forca}%, var(--superficie))`,
-                          color: forca > 55 ? "#ffffff" : "var(--texto)",
+                          color: forca > 55 ? "var(--texto-sobre-serie)" : "var(--texto)",
+                          // as células aparecem em diagonal, da esquerda para a direita
+                          animationDelay: `${(linha + coluna) * 30}ms`,
                         }}
                       >
                         {Math.round(valor)}

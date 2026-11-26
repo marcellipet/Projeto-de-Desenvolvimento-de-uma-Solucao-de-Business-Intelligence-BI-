@@ -1,0 +1,49 @@
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  animation: aparecer 0.4s ease-out both;
+}
+
+.tabela th {
+  padding: 7px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--texto-fraco);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--borda);
+}
+
+.tabela td {
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.tabela tbody tr {
+  transition: background-color 0.15s;
+}
+
+.tabela tbody tr:hover {
+  background: var(--faixa);
+}
+
+.tabela .numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fraco {
+  color: var(--texto-fraco);
+}
+
+.vazio {
+  padding: 12px 0;
+  color: var(--texto-fraco);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}

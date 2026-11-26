@@ -3,17 +3,33 @@ import styles from "./BarrasHorizontais.module.css";
 
 // Gráfico de barras sem biblioteca: cada barra é uma <div> com width em %.
 // itens: [{ nome, horas, delegavel }] já ordenados do maior para o menor.
-// Com dividirDelegavel, a barra mostra a parte delegável em outra cor.
-export default function BarrasHorizontais({ itens, total, dividirDelegavel = false }) {
+//
+// Opções:
+// - dividirDelegavel: a barra mostra a parte delegável em outra cor
+// - cor: cor da barra quando não divide (nome de variável, ex.: "serie-2")
+// - detalhe: função que devolve o texto pequeno ao lado das horas
+export default function BarrasHorizontais({
+  itens,
+  total,
+  dividirDelegavel = false,
+  cor = "serie-1",
+  detalhe,
+}) {
   if (!itens.length) {
     return <p className={styles.vazio}>Nenhum registro com esses filtros.</p>;
   }
 
   const maior = itens[0].horas || 1;
 
+  function textoDetalhe(item) {
+    if (detalhe) return detalhe(item);
+    if (dividirDelegavel) return `${porcentagem(item.delegavel, item.horas)} deleg.`;
+    return porcentagem(item.horas, total);
+  }
+
   return (
     <ul className={styles.lista}>
-      {itens.map((item) => {
+      {itens.map((item, posicao) => {
         const naoDelegavel = item.horas - item.delegavel;
         const dica = dividirDelegavel
           ? `${item.nome}: ${horas(item.horas)}, sendo ${horas(item.delegavel)} delegáveis`
@@ -26,7 +42,10 @@ export default function BarrasHorizontais({ itens, total, dividirDelegavel = fal
             <div className={styles.trilho} aria-hidden="true">
               <div
                 className={styles.barra}
-                style={{ width: `${(item.horas / maior) * 100}%` }}
+                style={{
+                  width: `${(item.horas / maior) * 100}%`,
+                  animationDelay: `${posicao * 40}ms`, // uma barra depois da outra
+                }}
               >
                 {dividirDelegavel ? (
                   <>
@@ -44,18 +63,17 @@ export default function BarrasHorizontais({ itens, total, dividirDelegavel = fal
                     )}
                   </>
                 ) : (
-                  <span className={`${styles.parte} ${styles.serie1}`} />
+                  <span
+                    className={styles.parte}
+                    style={{ background: `var(--${cor})` }}
+                  />
                 )}
               </div>
             </div>
 
             <span className={styles.valor}>
               {horas(item.horas)}
-              <span className={styles.secundario}>
-                {dividirDelegavel
-                  ? `${porcentagem(item.delegavel, item.horas)} deleg.`
-                  : porcentagem(item.horas, total)}
-              </span>
+              <span className={styles.secundario}>{textoDetalhe(item)}</span>
             </span>
           </li>
         );

@@ -4,26 +4,26 @@
   min-width: 0;
 }
 
-/* No celular a tabela rola para o lado sem alargar a página */
+/* Em tela estreita a tabela rola para o lado sem alargar a página */
 .rolagem {
   overflow-x: auto;
 }
 
 .mapa {
   width: 100%;
-  min-width: 600px;
+  min-width: 560px;
   border-collapse: separate;
   border-spacing: 2px; /* o espaço branco entre as células, sem precisar de borda */
-  font-size: 12.5px;
   font-variant-numeric: tabular-nums;
 }
 
 .mapa th {
+  padding: 4px 6px;
+  font-size: 11px;
   font-weight: 500;
-  color: var(--texto-2);
+  color: var(--texto-fraco);
   text-align: center;
   white-space: nowrap;
-  padding: 4px 6px;
 }
 
 .mapa th:first-child,
@@ -31,11 +31,20 @@
   text-align: left;
 }
 
+.mapa tbody th {
+  font-size: 13px;
+  color: var(--texto);
+}
+
 .mapa td {
+  height: 32px;
+  min-width: 48px;
   text-align: center;
-  height: 34px;
-  min-width: 50px;
-  border-radius: 3px;
+  border-radius: 2px;
+}
+
+.celula {
+  animation: aparecer 0.4s ease-out both;
 }
 
 .zero {
@@ -51,7 +60,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--texto-fraco);
 }
 
@@ -67,7 +76,13 @@
 }
 
 .vazio {
-  font-size: 13.5px;
-  color: var(--texto-fraco);
   padding: 12px 0;
+  color: var(--texto-fraco);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
 }

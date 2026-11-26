@@ -1,11 +1,12 @@
 import styles from "./Medidor.module.css";
 
-// Barra de 0 a 100%. Acima de 100% ela fica cheia e o número do cartão
-// mostra o excesso. status = { tipo: "bom" | "alerta" | "critico", texto }
-export default function Medidor({ valor, status }) {
+// Barra fina de 0 a 100% com uma linha de texto embaixo.
+// Acima de 100% ela fica cheia e o número do cartão mostra o excesso.
+// tipo: "bom" | "alerta" | "critico" (aparece uma bolinha de status) ou "destaque"
+export default function Medidor({ valor, tipo = "destaque", texto }) {
   const porcento = Math.round(valor * 100);
   const largura = Math.min(100, porcento);
-  const tipo = status ? status.tipo : "neutro";
+  const temStatus = tipo !== "destaque";
 
   return (
     <div className={styles.medidor}>
@@ -18,13 +19,20 @@ export default function Medidor({ valor, status }) {
         aria-valuenow={porcento}
       >
         <div
-          className={`${styles.preenchido} ${styles[tipo]}`}
-          style={{ width: `${largura}%` }}
+          className={styles.preenchido}
+          style={{ width: `${largura}%`, background: `var(--${tipo})` }}
         />
       </div>
-      {status && (
-        <p className={`${styles.status} ${styles[tipo]}`}>{status.texto}</p>
-      )}
+      <p className={styles.texto}>
+        {temStatus && (
+          <span
+            className={styles.ponto}
+            style={{ background: `var(--${tipo})` }}
+            aria-hidden="true"
+          />
+        )}
+        {texto}
+      </p>
     </div>
   );
 }
