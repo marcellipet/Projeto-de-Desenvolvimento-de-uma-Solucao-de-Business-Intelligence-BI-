@@ -1,0 +1,65 @@
+/*
+  Grade comum das páginas do relatório:
+  linha de indicadores em cima, cartões embaixo e, em algumas, uma faixa no fim.
+*/
+.pagina {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+  animation: entrar 0.35s ease-out both;
+}
+
+/* Visão Geral: indicadores | cartões | faixa de capacidade */
+.comFaixa {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+/* Apontamentos: só a tabela */
+.soConteudo {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* Dois cartões lado a lado: estreito (5) | largo (7) */
+.duas {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 14px;
+  min-height: 0;
+}
+
+/* Mesmo esquema, invertido: largo (7) | estreito (5) */
+.duasInvertida {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+
+/* Celular: tudo empilhado */
+@media (max-width: 760px) {
+  .pagina,
+  .comFaixa,
+  .soConteudo {
+    grid-template-rows: none;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .duas,
+  .duasInvertida {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

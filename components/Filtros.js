@@ -1,5 +1,28 @@
-import { nomeDoMes } from "@/lib/datas";
+import { mesCurto, nomeDoMes } from "@/lib/datas";
 import styles from "./Filtros.module.css";
+
+// Um grupo de botões, como o segmentador do Power BI: só um fica ativo por vez.
+// opcoes: [{ valor, texto, dica }]. "dica" é o nome completo (tooltip e leitor de tela).
+function Segmentador({ rotulo, valor, opcoes, onEscolher }) {
+  return (
+    <div className={styles.grupo} role="group" aria-label={rotulo}>
+      <span className={styles.rotulo}>{rotulo}</span>
+      {opcoes.map((opcao) => (
+        <button
+          key={opcao.valor}
+          type="button"
+          className={styles.chip}
+          aria-pressed={valor === opcao.valor}
+          aria-label={opcao.dica}
+          title={opcao.dica}
+          onClick={() => onEscolher(opcao.valor)}
+        >
+          {opcao.texto}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 // Não guarda estado: recebe os filtros do Painel e avisa quando algo muda
 export default function Filtros({ filtros, opcoes, onMudar, onLimpar }) {
@@ -7,56 +30,73 @@ export default function Filtros({ filtros, opcoes, onMudar, onLimpar }) {
     onMudar({ ...filtros, [campo]: valor });
   }
 
+  const algumFiltroAtivo =
+    filtros.mes !== "todos" ||
+    filtros.cliente !== "todos" ||
+    filtros.pessoa !== "todas" ||
+    filtros.tipo !== "todos";
+
   return (
     <div className={styles.filtros}>
-      <label className={styles.campo}>
-        Mês
-        <select
-          value={filtros.mes}
-          onChange={(e) => mudar("mes", e.target.value)}
-        >
-          <option value="todos">Todos</option>
-          {opcoes.meses.map((mes) => (
-            <option key={mes} value={mes}>
-              {nomeDoMes(mes)}
-            </option>
-          ))}
-        </select>
-      </label>
+      <Segmentador
+        rotulo="Período"
+        valor={filtros.mes}
+        onEscolher={(valor) => mudar("mes", valor)}
+        opcoes={[
+          { valor: "todos", texto: "Todos", dica: "Todo o período" },
+          ...opcoes.meses.map((mes) => ({
+            valor: mes,
+            texto: mesCurto(mes),
+            dica: nomeDoMes(mes),
+          })),
+        ]}
+      />
 
-      <label className={styles.campo}>
-        Cliente
-        <select
-          value={filtros.cliente}
-          onChange={(e) => mudar("cliente", e.target.value)}
-        >
-          <option value="todos">Todos</option>
-          {opcoes.clientes.map((cliente) => (
-            <option key={cliente} value={cliente}>
-              {cliente}
-            </option>
-          ))}
-        </select>
-      </label>
+      <Segmentador
+        rotulo="Cliente"
+        valor={filtros.cliente}
+        onEscolher={(valor) => mudar("cliente", valor)}
+        opcoes={[
+          { valor: "todos", texto: "Todos" },
+          ...opcoes.clientes.map((cliente) => ({
+            valor: cliente,
+            texto: cliente.replace(/^Cliente /, ""), // "Cliente A" vira "A"
+            dica: cliente,
+          })),
+        ]}
+      />
 
-      <label className={styles.campo}>
-        Pessoa
-        <select
-          value={filtros.pessoa}
-          onChange={(e) => mudar("pessoa", e.target.value)}
-        >
-          <option value="todas">Todas</option>
-          {opcoes.pessoas.map((pessoa) => (
-            <option key={pessoa} value={pessoa}>
-              {pessoa}
-            </option>
-          ))}
-        </select>
-      </label>
+      <Segmentador
+        rotulo="Pessoa"
+        valor={filtros.pessoa}
+        onEscolher={(valor) => mudar("pessoa", valor)}
+        opcoes={[
+          { valor: "todas", texto: "Todas" },
+          ...opcoes.pessoas.map((pessoa) => ({ valor: pessoa, texto: pessoa })),
+        ]}
+      />
 
-      <button type="button" className={styles.limpar} onClick={onLimpar}>
-        Limpar filtros
-      </button>
+      <Segmentador
+        rotulo="Tipo"
+        valor={filtros.tipo}
+        onEscolher={(valor) => mudar("tipo", valor)}
+        opcoes={[
+          { valor: "todos", texto: "Todos" },
+          { valor: "delegavel", texto: "Delegável" },
+          { valor: "nao-delegavel", texto: "Não delegável" },
+        ]}
+      />
+
+      {algumFiltroAtivo && (
+        <button
+          type="button"
+          className={styles.limpar}
+          onClick={onLimpar}
+          title="Limpar filtros"
+        >
+          Limpar
+        </button>
+      )}
     </div>
   );
 }

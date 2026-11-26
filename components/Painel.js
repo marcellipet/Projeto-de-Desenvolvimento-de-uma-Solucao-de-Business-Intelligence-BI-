@@ -1,196 +1,121 @@
-"use client"; // tem estado (os filtros), então roda no navegador
+"use client"; // tem estado (filtros e aba aberta), então roda no navegador
 
 import { useMemo, useState } from "react";
 import {
   atividadesPresentes,
-  capacidadeEmHoras,
-  diasUteisDoPeriodo,
-  filtrar,
-  horasPorSemana,
   mesesDisponiveis,
-  somarHoras,
-  somarPor,
-  statusDaOcupacao,
+  resumir,
   valoresUnicos,
 } from "@/lib/calculos";
-import {
-  ATIVIDADE_PROSPECCAO,
-  CLIENTE_INTERNO,
-  HORAS_POR_DIA,
-  USANDO_DADOS_FICTICIOS,
-} from "@/lib/config";
-import { horas, porcentagem } from "@/lib/formatar";
+import { USANDO_DADOS_FICTICIOS } from "@/lib/config";
+import { dataCompleta } from "@/lib/datas";
 import Filtros from "./Filtros";
-import CartaoKpi from "./CartaoKpi";
-import Medidor from "./Medidor";
-import Bloco from "./Bloco";
-import Legenda from "./Legenda";
-import GraficoSemanal from "./GraficoSemanal";
-import BarrasHorizontais from "./BarrasHorizontais";
-import MapaDeCalor from "./MapaDeCalor";
-import TabelaRegistros from "./TabelaRegistros";
+import VisaoGeral from "./paginas/VisaoGeral";
+import PorCliente from "./paginas/PorCliente";
+import Tendencia from "./paginas/Tendencia";
+import DecisaoDeContratacao from "./paginas/DecisaoDeContratacao";
+import Apontamentos from "./paginas/Apontamentos";
 import styles from "./Painel.module.css";
 
-const FILTROS_INICIAIS = { mes: "todos", cliente: "todos", pessoa: "todas" };
+const FILTROS_INICIAIS = {
+  mes: "todos",
+  cliente: "todos",
+  pessoa: "todas",
+  tipo: "todos",
+};
 
-const LEGENDA_DELEGAVEL = [
-  { rotulo: "Não delegável", tipo: "serie1" },
-  { rotulo: "Delegável", tipo: "serie2" },
+// Páginas do relatório, na ordem das abas do rodapé
+const PAGINAS = [
+  { id: "visao-geral", titulo: "Visão Geral", Pagina: VisaoGeral },
+  { id: "por-cliente", titulo: "Por Cliente", Pagina: PorCliente },
+  { id: "tendencia", titulo: "Tendência", Pagina: Tendencia },
+  { id: "contratacao", titulo: "Decisão de Contratação", Pagina: DecisaoDeContratacao },
+  { id: "apontamentos", titulo: "Apontamentos", Pagina: Apontamentos },
 ];
 
 export default function Painel({ registros }) {
   const [filtros, setFiltros] = useState(FILTROS_INICIAIS);
+  const [abaAberta, setAbaAberta] = useState(PAGINAS[0].id);
 
-  // Opções dos filtros e colunas do mapa saem dos próprios dados
-  const opcoes = useMemo(
-    () => ({
+  // Opções dos filtros, colunas do mapa e período saem dos próprios dados
+  const opcoes = useMemo(() => {
+    const datas = registros.map((r) => r.data).sort();
+    return {
       meses: mesesDisponiveis(registros),
       clientes: valoresUnicos(registros, "cliente"),
       pessoas: valoresUnicos(registros, "colaborador"),
       atividades: atividadesPresentes(registros),
-    }),
-    [registros]
-  );
+      inicio: datas[0],
+      fim: datas[datas.length - 1],
+    };
+  }, [registros]);
 
   // useMemo: só recalcula quando os filtros (ou os dados) mudam
-  const visiveis = useMemo(
-    () => filtrar(registros, filtros),
+  const resumo = useMemo(
+    () => resumir(registros, filtros),
     [registros, filtros]
   );
-  const diasUteis = useMemo(
-    () => diasUteisDoPeriodo(registros, filtros.mes),
-    [registros, filtros.mes]
-  );
 
-  const pessoas = filtros.pessoa === "todas" ? opcoes.pessoas.length : 1;
-  const semanas = useMemo(
-    () => horasPorSemana(visiveis, diasUteis, pessoas),
-    [visiveis, diasUteis, pessoas]
-  );
+  if (!registros.length) {
+    return <p className={styles.semDados}>Nenhum registro em data/registros.json.</p>;
+  }
 
-  // Indicadores
-  const capacidade = capacidadeEmHoras(diasUteis, pessoas);
-  const total = somarHoras(visiveis);
-  const delegaveis = somarHoras(visiveis.filter((r) => r.delegavel));
-  const prospeccao = somarHoras(
-    visiveis.filter((r) => r.atividade === ATIVIDADE_PROSPECCAO)
-  );
-  const ocupacao = capacidade ? total / capacidade : 0;
-  const todosOsClientes = filtros.cliente === "todos";
-  const prospeccaoNoFiltro =
-    todosOsClientes || filtros.cliente === CLIENTE_INTERNO;
-
-  const porCliente = somarPor(visiveis, "cliente");
-  const porAtividade = somarPor(visiveis, "atividade");
+  const { Pagina } = PAGINAS.find((p) => p.id === abaAberta);
 
   return (
-    <main className={styles.painel}>
-      <header className={styles.topo}>
-        <div>
-          <p className={styles.marca}>KX Soluções</p>
-          <h1 className={styles.titulo}>Capacidade e Atendimento</h1>
-        </div>
-        {USANDO_DADOS_FICTICIOS && (
-          <span className={styles.aviso}>Dados fictícios</span>
-        )}
-      </header>
+    <div className={styles.encaixe}>
+      <div className={styles.tela}>
+        <header className={styles.topo}>
+          <h1 className={styles.titulo}>
+            Capacidade e Atendimento · KX Soluções
+            <span className={styles.subtitulo}>
+              Onde o tempo dos sócios foi gasto, por cliente e atividade
+            </span>
+          </h1>
+          <span className={styles.etiqueta}>
+            {dataCompleta(opcoes.inicio)} – {dataCompleta(opcoes.fim)}
+            {USANDO_DADOS_FICTICIOS && " · dados fictícios"}
+          </span>
+        </header>
 
-      <Filtros
-        filtros={filtros}
-        opcoes={opcoes}
-        onMudar={setFiltros}
-        onLimpar={() => setFiltros(FILTROS_INICIAIS)}
-      />
-
-      <section className={styles.kpis} aria-label="Indicadores">
-        <CartaoKpi
-          rotulo="Horas registradas"
-          valor={horas(total)}
-          detalhe={`${diasUteis.length} dias úteis · ${pessoas} ${
-            pessoas === 1 ? "pessoa" : "pessoas"
-          }`}
+        <Filtros
+          filtros={filtros}
+          opcoes={opcoes}
+          onMudar={setFiltros}
+          onLimpar={() => setFiltros(FILTROS_INICIAIS)}
         />
-        <CartaoKpi
-          rotulo={
-            todosOsClientes ? "Ocupação da capacidade" : "Parcela da capacidade"
-          }
-          valor={porcentagem(total, capacidade)}
-          detalhe={`Capacidade: ${horas(capacidade)} (${HORAS_POR_DIA} h por dia útil)`}
-        >
-          <Medidor
-            valor={ocupacao}
-            status={todosOsClientes ? statusDaOcupacao(ocupacao) : null}
-          />
-        </CartaoKpi>
-        <CartaoKpi
-          rotulo="Horas delegáveis"
-          valor={horas(delegaveis)}
-          detalhe={`${porcentagem(delegaveis, total)} do tempo poderia ir para outra pessoa`}
-        />
-        <CartaoKpi
-          rotulo="Tempo em prospecção"
-          valor={horas(prospeccao)}
-          detalhe={
-            prospeccaoNoFiltro
-              ? `${porcentagem(prospeccao, total)} do tempo registrado`
-              : `Prospecção é lançada no cliente "${CLIENTE_INTERNO}"`
-          }
-        />
-      </section>
 
-      <Bloco
-        titulo="Horas por semana e capacidade"
-        pergunta="A carga cabe na capacidade dos sócios?"
-        legenda={
-          <Legenda
-            itens={[
-              ...LEGENDA_DELEGAVEL,
-              { rotulo: `Capacidade (${HORAS_POR_DIA} h por dia útil)`, tipo: "linha" },
-            ]}
+        <main id="pagina-aberta" className={styles.conteudo} role="tabpanel">
+          {/* A key muda ao trocar de aba: a página é recriada
+              e as animações de entrada rodam de novo. */}
+          <Pagina
+            key={abaAberta}
+            resumo={resumo}
+            filtros={filtros}
+            atividades={opcoes.atividades}
           />
-        }
-      >
-        <GraficoSemanal semanas={semanas} />
-      </Bloco>
+        </main>
 
-      <div className={styles.duas}>
-        <Bloco
-          titulo="Tempo por cliente"
-          pergunta="Qual cliente consome mais tempo?"
-        >
-          <BarrasHorizontais itens={porCliente} total={total} />
-        </Bloco>
-        <Bloco
-          titulo="Tempo por atividade"
-          pergunta="O que mais ocupa a rotina e o que dá para delegar?"
-          legenda={<Legenda itens={LEGENDA_DELEGAVEL} />}
-        >
-          <BarrasHorizontais
-            itens={porAtividade}
-            total={total}
-            dividirDelegavel
-          />
-        </Bloco>
+        <nav className={styles.abas} role="tablist" aria-label="Páginas do relatório">
+          {PAGINAS.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              role="tab"
+              aria-selected={p.id === abaAberta}
+              aria-controls="pagina-aberta"
+              className={styles.aba}
+              onClick={() => setAbaAberta(p.id)}
+            >
+              {p.titulo}
+            </button>
+          ))}
+          <span className={styles.fonte}>
+            Fonte: data/registros.json · {registros.length} registros · clientes
+            anonimizados
+          </span>
+        </nav>
       </div>
-
-      <Bloco
-        titulo="Cliente × atividade (horas)"
-        pergunta="Em que tipo de trabalho vai o tempo de cada cliente?"
-      >
-        <MapaDeCalor registros={visiveis} atividades={opcoes.atividades} />
-      </Bloco>
-
-      <Bloco
-        titulo="Apontamentos de horas"
-        pergunta="De onde saíram os números acima"
-      >
-        {/* A key muda junto com os filtros: o React recria a tabela
-            e o "Mostrar mais" volta para as 10 primeiras linhas. */}
-        <TabelaRegistros
-          key={`${filtros.mes}|${filtros.cliente}|${filtros.pessoa}`}
-          registros={visiveis}
-        />
-      </Bloco>
-    </main>
+    </div>
   );
 }

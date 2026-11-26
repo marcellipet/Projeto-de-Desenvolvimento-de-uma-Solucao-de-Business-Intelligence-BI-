@@ -1,0 +1,80 @@
+.rosca {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px 28px;
+}
+
+/* O disco é um círculo com conic-gradient. A máscara também é um
+   conic-gradient que vai de 0% a 100% (--giro, declarada no globals.css):
+   é isso que faz a rosca "se desenhar" em volta ao aparecer. */
+.disco {
+  position: relative;
+  flex: none;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  -webkit-mask: conic-gradient(#000 var(--giro), transparent 0);
+  mask: conic-gradient(#000 var(--giro), transparent 0);
+  animation: girar 0.9s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+
+/* O furo do meio, na cor do fundo do cartão */
+.furo {
+  position: absolute;
+  inset: 24%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--superficie);
+}
+
+.centro {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.legendaDoCentro {
+  font-size: 11px;
+  color: var(--texto-fraco);
+}
+
+.legenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amostra {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.fraco {
+  color: var(--texto-fraco);
+}
+
+.vazio {
+  padding: 12px 0;
+  color: var(--texto-fraco);
+}
+
+@keyframes girar {
+  from {
+    --giro: 0%;
+  }
+}

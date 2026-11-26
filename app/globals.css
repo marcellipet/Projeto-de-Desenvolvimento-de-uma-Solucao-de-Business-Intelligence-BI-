@@ -4,30 +4,59 @@
   O gráfico do Chart.js também lê estas variáveis (GraficoSemanal.js).
 */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
 
-  --fundo: #f1f4f8;
+  --fundo: #f1f2f4;
   --superficie: #ffffff;
-  --superficie-2: #f5f7fa;
-  --texto: #121821;
-  --texto-2: #465163;
-  --texto-fraco: #6c7789;
-  --linha: #dfe4eb;
-  --linha-forte: #c4ccd8;
-  --destaque: #1c5cab;
-  --destaque-suave: #e4edf9;
+  --faixa: #f6f7f8; /* barra de filtros e abas */
+  --texto: #1c1f24;
+  --texto-2: #3f4650;
+  --texto-fraco: #6a717b;
+  --borda: #dfe2e6;
 
   /* Séries dos gráficos */
-  --serie-1: #2a78d6; /* não delegável */
-  --serie-2: #eb6834; /* delegável */
+  --serie-1: #0f8f84; /* não delegável */
+  --serie-2: #d9822b; /* delegável */
+  --destaque: #3b6fd4; /* filtro ativo, foco, prospecção */
 
   /* Status: sempre aparecem junto com um texto, nunca só a cor */
-  --bom: #0ca30c;
-  --alerta: #fab219;
-  --critico: #d03b3b;
+  --bom: #1d8a3c;
+  --alerta: #c48a00;
+  --critico: #c9484a;
 
-  --raio: 8px;
-  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Texto sobre fundo colorido (filtro ativo, células fortes do mapa de calor) */
+  --texto-sobre-destaque: #ffffff;
+  --texto-sobre-serie: #ffffff;
+
+  --raio: 4px;
+  --fonte: var(--fonte-plex), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #0e1013;
+    --superficie: #171a1f;
+    --faixa: #1e2228;
+    --texto: #e8eaed;
+    --texto-2: #c3c8cf;
+    --texto-fraco: #9099a4;
+    --borda: #2a2f36;
+    --serie-1: #1f9e8f;
+    --serie-2: #d07c26;
+    --destaque: #5b93ff;
+    --bom: #3fb35f;
+    --alerta: #e0a923;
+    --critico: #ee6c6e;
+    --texto-sobre-destaque: #0e1013;
+    --texto-sobre-serie: #0e1013;
+  }
+}
+
+/* Valor animável do gráfico de rosca (Rosca.js) */
+@property --giro {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
 }
 
 * {
@@ -36,16 +65,20 @@
 
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
+/* A tela do painel fica centralizada, como uma página do Power BI */
 body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   background: var(--fundo);
   color: var(--texto);
-  font-family: var(--fonte);
-  font-size: 15px;
-  line-height: 1.5;
+  font: 13px/1.4 var(--fonte);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -64,4 +97,31 @@ select {
 :focus-visible {
   outline: 2px solid var(--destaque);
   outline-offset: 2px;
+}
+
+/* No celular a tela deixa de ser fixa e a página rola normalmente */
+@media (max-width: 760px) {
+  html,
+  body {
+    height: auto;
+  }
+
+  body {
+    display: block;
+    overflow: auto;
+  }
+}
+
+/*
+  Animações: cada .module.css declara os @keyframes que usa, porque o CSS
+  Modules renomeia os nomes das animações de cada arquivo.
+  Quem pediu menos movimento no sistema não vê animação nenhuma.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

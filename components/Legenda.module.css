@@ -4,9 +4,9 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
-  font-size: 12.5px;
-  color: var(--texto-2);
+  gap: 4px 14px;
+  font-size: 11.5px;
+  color: var(--texto-fraco);
 }
 
 .item {
@@ -35,4 +35,11 @@
   height: 0;
   border-top: 2px dashed var(--texto-2);
   border-radius: 0;
+}
+
+.marca {
+  width: 2px;
+  height: 12px;
+  background: var(--texto);
+  border-radius: 1px;
 }
